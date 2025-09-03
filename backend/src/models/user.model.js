@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const dbconfig = require('../config/db.config')
 
 const userSchema = mongoose.Schema(
 
@@ -13,8 +13,8 @@ const userSchema = mongoose.Schema(
         },
         username: {
             type: String,
-            require: [true,"Please input an username"],
-            lowecase: true,
+            require: [true,"Please input an username using email"],
+            lowercase: true,
             trim: true,
             match: [/^\S+@\S+\.\S+$/, "Invalid email format"],
         },

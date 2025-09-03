@@ -4,7 +4,9 @@ const app = express();
 const userRoutes = require('./routes/user.routes')
 // const dbconfig = require('../src/config/db.config')
 
+
 app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 app.use(cors())
 
 //-----------------------------------------------------------
