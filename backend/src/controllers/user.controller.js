@@ -15,7 +15,7 @@ exports.createUser  = async (req, res) => {
         const user = new User({
             name,
             username,
-            password
+            password    
         })
         const new_user = await user.save();
         res.status(200).json(
@@ -59,29 +59,19 @@ exports.getUserById = async (req,res) => {
 
 exports.updateUserById = asyncHandler(async (req,res) =>{
    
-        const { name } = req.body;
+        const {user_id} = req.params;
 
-        const user_id = req.params.user_id;
-
-
-        if(!name){
-            return res.status(400).json({message: ""})
-        }
+        const updated_user = await User.findByIdAndUpdate(user_id, req.body);
 
         if(!user_id){
-            return res.status(400).json({message: "Not found ID"})
+            return res.status(400).json({message: "Id not found"})
         }
 
-        const updated_user = await User.findByIdAndUpdate(
-            {_id:user_id},
-            {name}
-        );
-        res.status(200).json({
+        
+        return res.status(200).json({
             message: "updated successfully",
             data: updated_user
         })
-
-
 
 })
 
@@ -89,9 +79,8 @@ exports.deleteUserById = async (req, res) => {
 
     const user_id = req.params.user_id;
 
-    const deleteUser = await User.findByIdAndDelete(
-        {_id: user_id}
-    );
+
+    const deleteUser = await User.findByIdAndDelete(user_id);
 
     res.status(200).json({
         message: "Deleted",

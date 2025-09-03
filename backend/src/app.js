@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express();
 const userRoutes = require('./routes/user.routes')
-// const dbconfig = require('../src/config/db.config')
+const taskRoutes = require('./routes/task.routes')
 
 
 app.use(express.json())
@@ -16,6 +16,7 @@ app.get('/', (req,res) =>{
 })
 
 app.use(userRoutes)
+app.use(taskRoutes)
 
 
 
