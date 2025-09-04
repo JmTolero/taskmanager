@@ -11,6 +11,11 @@ const TaskSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        priority: {
+            type: String,
+            enum: ['low', 'medium', 'high'],
+            default: 'medium'
+        },
         status: {
             type: String,
             enum: ['pending', 'in-progress', 'completed'], // allowed values

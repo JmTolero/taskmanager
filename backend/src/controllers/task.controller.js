@@ -3,7 +3,7 @@ const Task = require('../models/task.model')
 
 exports.createTask = async (req, res) => {
     try {
-        const { Taskname, description, user_id} = req.body
+        const { Taskname, description, user_id, priority, status } = req.body
 
         if(!Taskname || !description || !user_id){
             return res.status(404).json({
@@ -14,6 +14,8 @@ exports.createTask = async (req, res) => {
         const task = new Task({
             Taskname,
             description,
+            priority: priority || 'medium',
+            status: status || 'pending',
             user: user_id
         })
 
@@ -35,7 +37,11 @@ exports.createTask = async (req, res) => {
 exports.getAllTask = async (req, res) => {
 
     try {
-        const tasks = await Task.find();
+        const { user_id } = req.query;
+        if (!user_id) {
+            return res.status(400).json({ message: 'user_id is required' })
+        }
+        const tasks = await Task.find({ user: user_id });
         return res.status(200).json(tasks)
     } catch (error) {
         console.log(error)
@@ -49,7 +55,14 @@ exports.getAllTask = async (req, res) => {
 exports.getTaskById = async (req,res) => {
         try {
             const {task_id} = req.params;
+            const { user_id } = req.query;
             const task = await Task.findById(task_id);
+            if (!task) {
+                return res.status(404).json({ message: 'Task not found' })
+            }
+            if (!user_id || String(task.user) !== String(user_id)) {
+                return res.status(403).json({ message: 'Forbidden' })
+            }
             return res.status(200).json({
                 task_id,
                 data: task
@@ -66,7 +79,15 @@ exports.getTaskById = async (req,res) => {
 exports.updateTaskById = async (req, res) => {
     try {
         const { task_id } = req.params;
-        const updatedTask = await Task.findByIdAndUpdate(task_id, req.body);
+        const { user_id } = req.query;
+        const existing = await Task.findById(task_id);
+        if (!existing) {
+            return res.status(404).json({ message: 'Task not found' })
+        }
+        if (!user_id || String(existing.user) !== String(user_id)) {
+            return res.status(403).json({ message: 'Forbidden' })
+        }
+        const updatedTask = await Task.findByIdAndUpdate(task_id, req.body, { new: true });
 
         if(!task_id){
             return res.status(404).json({
@@ -79,7 +100,7 @@ exports.updateTaskById = async (req, res) => {
             data: updatedTask
         })
     } catch (error) {
-        console.log(err)
+        console.log(error)
         return res.status(500).json({
             errmessage: "Failed update",
             error
@@ -90,6 +111,22 @@ exports.updateTaskById = async (req, res) => {
 exports.deleteTaskById = async (req,res) => {
     try {
         const {task_id} = req.params;
+        const { user_id } = req.query;
+
+        if(!task_id){
+            return res.status(400).json({
+                message: "Task Id is required"
+            })
+        }
+
+        const existing = await Task.findById(task_id);
+        if (!existing) {
+            return res.status(404).json({ message: 'No found Task Id' })
+        }
+        if (!user_id || String(existing.user) !== String(user_id)) {
+            return res.status(403).json({ message: 'Forbidden' })
+        }
+
         const deleteTask = await Task.findByIdAndDelete(task_id)
         
         return res.status(200).json({
