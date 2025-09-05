@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import axios from 'axios';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -26,26 +27,19 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Store user data in localStorage
-        localStorage.setItem('user', JSON.stringify(data.user));
-        // Redirect to tasks page
-        router.push('/');
-      } else {
-        setError(data.message || 'Login failed');
-      }
+      const res = await axios.post("/api/login", formData);
+    
+      // If request is successful
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      router.push("/");
     } catch (err) {
-      setError('Network error. Please try again.');
+      if (err.response) {
+        // Server responded with error status (4xx or 5xx)
+        setError(err.response.data.message || "Login failed");
+      } else {
+        // No response / network error
+        setError("Network error. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
