@@ -3,7 +3,7 @@ const Task = require('../models/task.model')
 
 exports.createTask = async (req, res) => {
     try {
-        const { Taskname, description, user_id, priority, status } = req.body
+        const { Taskname, description, user_id, status } = req.body
 
         if(!Taskname || !description || !user_id){
             return res.status(404).json({
@@ -14,7 +14,6 @@ exports.createTask = async (req, res) => {
         const task = new Task({
             Taskname,
             description,
-            priority: priority || 'medium',
             status: status || 'pending',
             user: user_id
         })

@@ -12,7 +12,7 @@ export default function EditTaskPage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({ Taskname: '', description: '', priority: 'medium', status: 'pending' });
+  const [form, setForm] = useState({ Taskname: '', description: '', status: 'pending' });
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -34,7 +34,6 @@ export default function EditTaskPage() {
         setForm({
           Taskname: t.Taskname || '',
           description: t.description || '',
-          priority: t.priority || 'medium',
           status: t.status || 'pending'
         });
       } else {
@@ -60,61 +59,49 @@ export default function EditTaskPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-sky-500 to-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-800">Loading task...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-slate-800">Loading task...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-sky-500 to-white">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit Task</h1>
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">Edit Task</h1>
 
         {error && (
           <div className="mb-4 rounded-md bg-red-50 p-4 text-red-700">{error}</div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 bg-white rounded-lg shadow p-6">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-white/70 backdrop-blur-sm rounded-xl shadow-lg border border-white/20 p-6">
           <div>
-            <label htmlFor="Taskname" className="block text-sm font-medium text-gray-700">Task Name</label>
+            <label htmlFor="Taskname" className="block text-sm font-medium text-slate-700 mb-2">Task Name</label>
             <input
               id="Taskname"
-              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/50"
               value={form.Taskname}
               onChange={(e) => setForm({ ...form, Taskname: e.target.value })}
             />
           </div>
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+            <label htmlFor="description" className="block text-sm font-medium text-slate-700 mb-2">Description</label>
             <textarea
               id="description"
               rows={4}
-              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/50"
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Priority</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Status</label>
               <select
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                value={form.priority}
-                onChange={(e) => setForm({ ...form, priority: e.target.value })}
-              >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Status</label>
-              <select
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 block w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/50"
                 value={form.status}
                 onChange={(e) => setForm({ ...form, status: e.target.value })}
               >
@@ -125,8 +112,8 @@ export default function EditTaskPage() {
             </div>
           </div>
           <div className="flex justify-end space-x-3">
-            <button type="button" onClick={() => router.push('/')} className="px-4 py-2 rounded-md border text-gray-800 border-gray-300 hover:bg-gray-50">Cancel</button>
-            <button type="submit" className="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Save Changes</button>
+            <button type="button" onClick={() => router.push('/')} className="px-6 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all duration-200 font-medium">Cancel</button>
+            <button type="submit" className="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 font-medium">Save Changes</button>
           </div>
         </form>
       </div>
